@@ -1,0 +1,71 @@
+<form class="form-inline" style="width: 380px;margin: 10px auto;">
+	<div class="form-group mx-sm-3">
+		<input type="text" class="form-control" id="input-password">
+	</div>
+	<input type="number" min="10" max="35" placeholder="количество" id="input-length" value="10">
+	<div class="checkbox">
+		<label for="checkbox1">Буквы маленькие</label>
+		<input type="checkbox" id="checkbox1" checked>
+	</div>
+	<div class="checkbox">
+		<label for="checkbox2">Буквы большие</label>
+		<input type="checkbox" id="checkbox2">
+	</div>
+	<div class="checkbox">
+		<label for="checkbox3">Цифры</label>
+		<input type="checkbox" id="checkbox3">
+	</div>
+	<div class="checkbox">
+		<label for="checkbox4">Символы</label>
+		<input type="checkbox" id="checkbox4">
+	</div>
+	<button type="button" id="input-generate" class="btn btn-primary">Сгенерировать</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script>
+	$("#input-generate").click(function () {
+		console.log($("#input-length").val())
+		$("#input-password").val(generatePassword());
+		return false;
+	});
+
+	function generatePassword() {
+		// var length = 8;
+		var length = parseFloat($("#input-length").val());
+		console.log(length)
+
+		charset = "";
+		letters1 = "abcdefghijklmnopqrstuvwxyz";
+		letters2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		simvols = "~!@-#$";
+		numbers = "0123456789";
+
+		if ($("#checkbox1").is(':checked')) {
+			charset += letters1;
+		}
+		if ($("#checkbox2").is(':checked')) {
+			charset += letters2;
+		}
+		if ($("#checkbox3").is(':checked')) {
+			charset += numbers;
+		}
+		if ($("#checkbox4").is(':checked')) {
+			charset += simvols;
+		}
+		console.log(charset)
+
+		if (window.crypto && window.crypto.getRandomValues) {
+			return Array(length)
+				.fill(charset)
+				.map(x => x[Math.floor(crypto.getRandomValues(new Uint32Array(1))[0] / (0xffffffff + 1) * (x.length + 1))])
+				.join('');
+		} else {
+			res = '';
+			for (var i = 0, n = charset.length; i < length; ++i) {
+				res += charset.charAt(Math.floor(Math.random() * n));
+			}
+			return res;
+		}
+	}
+</script>
